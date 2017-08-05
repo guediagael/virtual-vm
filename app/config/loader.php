@@ -10,4 +10,9 @@ $loader->registerDirs(
         $config->application->controllersDir,
         $config->application->modelsDir
     ]
+);
+$loader->registerNamespaces(
+    array(
+        'Wallet' => $config->application->modelsDir . '/'
+    )
 )->register();

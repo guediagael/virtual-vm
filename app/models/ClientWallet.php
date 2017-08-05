@@ -187,14 +187,15 @@ class ClientWallet extends \Phalcon\Mvc\Model implements \Wallet
      */
     public static function findFirst($parameters = null)
     {
+
         return parent::findFirst($parameters);
     }
 
     function getData()
     {
-        $this->coins[ModelCoin::ONE_RUB] = 10;
-        $this->coins[ModelCoin::TWO_RUB] = 30;
-        $this->coins[ModelCoin::FIVE_RUB] = 20;
-        $this->coins[ModelCoin::TEN_RUB] = 15;
+        $this->coins[Coin::ONE_RUB] = $this->getOneRub();
+        $this->coins[Coin::TWO_RUB] = $this->getTwoRub();
+        $this->coins[Coin::FIVE_RUB] = $this->getFiveRub();
+        $this->coins[Coin::TEN_RUB] = $this->getTenRub();
     }
 }

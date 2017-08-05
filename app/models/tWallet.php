@@ -33,4 +33,6 @@ trait TWallet
     {
         return $this->coins;
     }
+
+
 }

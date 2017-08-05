@@ -192,9 +192,9 @@ class VmWallet extends \Phalcon\Mvc\Model implements \Wallet
 
     function getData()
     {
-        $this->coins[ModelCoin::ONE_RUB] = 100;
-        $this->coins[ModelCoin::TWO_RUB] = 100;
-        $this->coins[ModelCoin::FIVE_RUB] = 100;
-        $this->coins[ModelCoin::TEN_RUB] = 100;
+        $this->coins[Coin::ONE_RUB] = $this->getOneRub();
+        $this->coins[Coin::TWO_RUB] = $this->getTwoRub();
+        $this->coins[Coin::FIVE_RUB] = $this->getFiveRub();
+        $this->coins[Coin::TEN_RUB] = $this->getTenRub();
     }
 }
