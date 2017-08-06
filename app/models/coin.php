@@ -36,15 +36,15 @@ class Coin
         switch ($val){
             case self::ONE_RUB:
                 $this->value = 1;
-                $this->imageUrl = 'public/img/oneRuble.png';
+                $this->imageUrl = 'img/oneRuble.png';
                 break;
             case self::TWO_RUB:
                 $this->value=2;
-                $this->imageUrl = 'public/img/twoRubles.png';
+                $this->imageUrl = 'img/twoRubles.png';
                 break;
             case self::FIVE_RUB:
                 $this->value = 5;
-                $this->imageUrl = 'public/img/fiveRubles.png';
+                $this->imageUrl = 'img/fiveRubles.png';
                 break;
             case self::TEN_RUB:
                 $this->value = 10;

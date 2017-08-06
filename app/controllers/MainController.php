@@ -3,11 +3,13 @@
 use Wallet\ClientWallet as Client;
 use Wallet\VmWallet as VendingWallet;
 use Wallet\Coin as Coin;
+
 class MainController extends \Phalcon\Mvc\Controller
 {
+    private $baseUrl ='http://localhost/virtual-vm';
 
     private $customerBalance = 0;
-    private $vmCache = 0;
+    private $vmCache = 15;
     private $vmBalance = 0;
 
     private $customerWallet;
@@ -18,6 +20,9 @@ class MainController extends \Phalcon\Mvc\Controller
     private $vendingMachineCoins;
     private $cacheCoins;
 
+    private $message= ' ';
+    private $products;
+
 
     public function indexAction()
     {
@@ -26,13 +31,13 @@ class MainController extends \Phalcon\Mvc\Controller
 
         $this->getMachineInfo();
         $this->view->setVar('vmCache' ,$this->vmCache);
+        $this->view->setVar('message',$this->message);
     }
 
 
 
    public function balanceInfoAction(){
         $this->view->setVar('clientBalance' ,50);
-//        $this->flash->notice("Nothing inserted");
         $this->view->getVar('clientBalance');
    }
 
@@ -57,18 +62,36 @@ class MainController extends \Phalcon\Mvc\Controller
 
        }
 
+       $this->view->setVar('message','');
        $this->getCustomerInfo();
        $this->getMachineInfo();
 
 
    }
 
-   public function machineInfoAction(){
-       $this->flash->notice("This is the vending machine");
+
+   public function getBalanceAction(){
+       $this->view->setVar('vmCache',$this->vmCache);
+       $this->view->setVar('message','');
+       $this->getCustomerInfo();
+       $this->getMachineInfo();
    }
 
 
-
+   public function productSelectedAction($id){
+       $product = Product::findFirst($id);
+       $price = $product->getPrice();
+       if ($price<=$this->vmCache)
+       {
+           $this->view->setVar('message','bought');
+       }
+       else
+       {
+           $this->view->setVar('message','not enought money');
+       }
+       $this->getCustomerInfo();
+       $this->getMachineInfo();
+   }
 
    private function getBalance(&$coins ): int{
        $ones = $coins[Coin::ONE_RUB];
@@ -100,6 +123,7 @@ class MainController extends \Phalcon\Mvc\Controller
 
 
    private function getCustomerInfo(){
+       $this->view->setVar('baseUrl',$this->baseUrl);
        $this->customerWallet = Client::findFirst();
        $this->customerWallet->getData();
        $this->customerCoins= $this->customerWallet->getAvailableCoins();
@@ -117,9 +141,11 @@ class MainController extends \Phalcon\Mvc\Controller
        $this->vendingMachineCoins = $this->vendingWallet->getAvailableCoins();
 
        $this->vmBalance = $this->getBalance($this->vendingMachineCoins);
+       $this->products = Product::find();
 
        $this->view->setVar('vmBalance' , $this->vmBalance);
        $this->view->setVar('vmCache' ,$this->vmCache);
+       $this->view->setVar('products',$this->products);
 
 
    }
