@@ -193,9 +193,21 @@ class ClientWallet extends \Phalcon\Mvc\Model implements \Wallet
 
     function getData()
     {
-        $this->coins[Coin::ONE_RUB] = $this->getOneRub();
-        $this->coins[Coin::TWO_RUB] = $this->getTwoRub();
-        $this->coins[Coin::FIVE_RUB] = $this->getFiveRub();
-        $this->coins[Coin::TEN_RUB] = $this->getTenRub();
+        $ones = new Coin(1);
+        $ones->quantity = $this->getOneRub();
+
+        $twos = new Coin(2);
+        $twos->quantity = $this->getTwoRub();
+
+        $fives = new Coin(5);
+        $fives->quantity = $this->getFiveRub();
+
+        $tens = new Coin(10);
+        $tens->quantity = $this->getTenRub();
+
+        $this->coins[Coin::ONE_RUB] = $ones;
+        $this->coins[Coin::TWO_RUB] = $twos;
+        $this->coins[Coin::FIVE_RUB] = $fives;
+        $this->coins[Coin::TEN_RUB] = $tens;
     }
 }

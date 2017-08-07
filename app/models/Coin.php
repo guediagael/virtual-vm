@@ -36,19 +36,19 @@ class Coin
         switch ($val){
             case self::ONE_RUB:
                 $this->value = 1;
-                $this->imageUrl = 'img/oneRuble.png';
+                $this->imageUrl = 'https://en.numista.com/catalogue/photos/russie/g32.jpg';
                 break;
             case self::TWO_RUB:
                 $this->value=2;
-                $this->imageUrl = 'img/twoRubles.png';
+                $this->imageUrl = 'https://en.numista.com/catalogue/photos/russie/g30.jpg';
                 break;
             case self::FIVE_RUB:
                 $this->value = 5;
-                $this->imageUrl = 'img/fiveRubles.png';
+                $this->imageUrl = 'https://en.numista.com/catalogue/photos/russie/g66.jpg';
                 break;
             case self::TEN_RUB:
                 $this->value = 10;
-                $this->imageUrl = 'public/img/tenRubles.png';
+                $this->imageUrl = 'https://en.numista.com/catalogue/photos/russie/g5849.jpg';
                 break;
             default : throw  new \Exception("Не существует такого достоинства");
             break;

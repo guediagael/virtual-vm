@@ -13,6 +13,7 @@ $loader->registerDirs(
 );
 $loader->registerNamespaces(
     array(
-        'Wallet' => $config->application->modelsDir . '/'
+        'Wallet' => $config->application->modelsDir . '/',
+        'Utils' =>$config->application->modelsDir . '/utils/'
     )
 )->register();
