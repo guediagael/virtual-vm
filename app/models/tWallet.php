@@ -14,20 +14,7 @@ trait TWallet
 
     private $coins= [];
 
-    function insertMoney(Coin $coin)
-    {
-        $var = $this->coins[$coin->getValue()];
-        $var++;
-        $this->coins[$coin->getValue()] = $var;
-    }
-
-    function retrieveMoney(Coin $coin)
-    {
-        $var = $this->coins[$coin->getValue()];
-        $var--;
-        $this->coins[$coin->getValue()] = $var;
-        return $var;
-    }
+   
 
     function getAvailableCoins(): array
     {
