@@ -14,7 +14,7 @@ trait TWallet
 
     private $coins= [];
 
-   
+
 
     function getAvailableCoins(): array
     {
