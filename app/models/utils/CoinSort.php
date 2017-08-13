@@ -5,8 +5,10 @@
  * Date: 8/6/2017
  * Time: 2:52 PM
  */
-namespace Utils;
-use Wallet\Coin as Coin;
+namespace Models\Utils;
+
+use Models\Coin as Coin;
+
 class CoinSort
 {
     private $initialBalance;
@@ -106,7 +108,7 @@ class CoinSort
 
     private function getTwos()
     {
-        if ($this-$this->availableTwos>0)
+        if ($this->availableTwos>0)
         {
             $minus = -2;
             $this->initialBalance+=$minus;
@@ -115,7 +117,7 @@ class CoinSort
         }
         else
         {
-            while ($this->initialBalance>=1)
+            while ($this->initialBalance>0)
             {
                 $this->getOnes();
             }

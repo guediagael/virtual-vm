@@ -1,9 +1,9 @@
 <?php
 
-use Wallet\ClientWallet as Client;
-use Wallet\VmWallet as VendingWallet;
-use Wallet\Coin as Coin;
-use Utils\CoinSort as CoinSort;
+use Models\ClientWallet as Client;
+use Models\VmWallet as VendingWallet;
+use Models\Coin as Coin;
+use Models\Utils\CoinSort as CoinSort;
 
 class MainController extends \Phalcon\Mvc\Controller
 {
@@ -177,10 +177,32 @@ class MainController extends \Phalcon\Mvc\Controller
        $this->getCustomerInfo();
        $this->getMachineInfo();
 
-       $this->view->setVar('vmCache',$availableBalance);
+//       $this->view->setVar('vmCache',$availableBalance);
        $this->view->setVar('message','');
    }
 
+
+   public function resetAction(){
+       $this->vendingWallet = VendingWallet::findFirst();
+       $this->vendingWallet->setTenRub(100);
+       $this->vendingWallet->setFiveRub(100);
+       $this->vendingWallet->setTwoRub(100);
+       $this->vendingWallet->setOneRub(100);
+       $this->vendingWallet->setBalance(0);
+       $this->vendingWallet->save();
+
+       $this->customerWallet = Client::findFirst();
+       $this->customerWallet->setOneRub(10);
+       $this->customerWallet->setTwoRub(30);
+       $this->customerWallet->setFiveRub(20);
+       $this->customerWallet->setTenRub(15);
+       $this->customerWallet->save();
+
+       $this->view->setVar('message','');
+       $this->getCustomerInfo();
+       $this->getMachineInfo();
+
+   }
 
    public function productSelectedAction($id){
        $product = Product::findFirst($id);

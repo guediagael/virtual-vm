@@ -43,4 +43,6 @@
         </div>
     </div>
 
+    <a href="{{ baseUrl }}/main/reset" class="btn btn-danger">Сброс</a>
+
 </div>

@@ -6,7 +6,7 @@
  * Time: 4:41 PM
  */
 
-namespace Wallet;
+namespace Models;
 
 
 trait TWallet

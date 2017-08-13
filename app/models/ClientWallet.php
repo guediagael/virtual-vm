@@ -1,10 +1,10 @@
 <?php
 
-namespace Wallet;
+namespace Models;
 
 class ClientWallet extends \Phalcon\Mvc\Model implements \Wallet
 {
-    use \Wallet\TWallet;
+    use \Models\TWallet;
 
     /**
      *
