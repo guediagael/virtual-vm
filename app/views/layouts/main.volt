@@ -4,10 +4,11 @@
         <div id="costumer" class="col-sm-4 panel panel-default">
             <div class="panel-heading"> Кашелёк {{ customerBalance }} руб</div>
             <div class="panel-body">
+                <p>Нажмите монетку, чтобы вставить ёё</p>
                 {%  for coin in coins  %}
                 <div class="thumbnail col-sm-2">
                      <a href="{{ baseUrl }}/main/coinInserted/{{ coin.value }}">
-                        <img src="{{ coin.imageUrl }}"  class="img-rounded" width="50" height="50" >
+                         <img src="{{ coin.imageUrl }}"  class="img-rounded" width="50" height="50" >
                         <div class="caption">
                             <p>{{ coin.quantity }}</p>
                         </div>

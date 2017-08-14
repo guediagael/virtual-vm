@@ -32,7 +32,8 @@ class Coin
     }
 
 
-    private function setValue($val){
+    private function setValue($val)
+    {
         switch ($val){
             case self::ONE_RUB:
                 $this->value = 1;
@@ -55,7 +56,8 @@ class Coin
         }
     }
 
-    public function getValue(): int{
+    public function getValue(): int
+    {
         return $this->value;
     }
 

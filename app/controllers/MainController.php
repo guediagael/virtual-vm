@@ -1,6 +1,5 @@
 <?php
 
-//namespace Controllers;
 
 use Models\ClientWallet as Client;
 use Models\VmWallet as VendingWallet;
@@ -11,33 +10,25 @@ use Models\Product;
 class MainController extends \Phalcon\Mvc\Controller
 {
     private $baseUrl ='http://localhost/virtual-vm';
-
-    private $customerBalance = 0;
     private $vmBalance = 0;
-    private $vmSum = 0;
-
     private $customerWallet;
     private $vendingWallet;
-
     private $customerCoins;
     private $vendingMachineCoins;
-
-    private $message= ' ';
     private $products;
 
-
-    public function indexAction()
+    public function indexAction($message=null)
     {
 
+        $this->view->setVar('message',$message);
         $this->getCustomerInfo();
 
         $this->getMachineInfo();
-        $this->view->setVar('message',$this->message);
     }
 
-
-   public function coinInsertedAction(int $value)
+    public function coinInsertedAction(int $value)
    {
+
        $this->customerWallet = Client::findFirst();
        $this->vendingWallet = VendingWallet::findFirst();
 
@@ -102,13 +93,13 @@ class MainController extends \Phalcon\Mvc\Controller
 
        }
 
-       $this->view->setVar('message','');
        $this->getCustomerInfo();
        $this->getMachineInfo();
 
+       $this->refreshPage(null);
+
 
    }
-
 
    public function getChangeAction()
    {
@@ -121,7 +112,6 @@ class MainController extends \Phalcon\Mvc\Controller
        $customerFives = $customer->getFiveRub();
        $customerTens = $customer->getTenRub();
 
-       $availableBalance = 0;
 
        if ($oldBalance>0)
        {
@@ -176,9 +166,9 @@ class MainController extends \Phalcon\Mvc\Controller
        $this->getCustomerInfo();
        $this->getMachineInfo();
 
-       $this->view->setVar('message','');
-   }
 
+       $this->refreshPage(null);
+   }
 
    public function resetAction()
    {
@@ -224,14 +214,17 @@ class MainController extends \Phalcon\Mvc\Controller
        }
 
 
-       $this->view->setVar('message','');
        $this->getCustomerInfo();
        $this->getMachineInfo();
+
+      $this->refreshPage(null);
 
    }
 
    public function productSelectedAction($id)
    {
+       $isSelectionValidated = false;
+
        $product = Product::findFirst($id);
 
        $price = $product->getPrice();
@@ -247,24 +240,32 @@ class MainController extends \Phalcon\Mvc\Controller
            $newBalance = $this->vmBalance - $price;
            $machine->setBalance($newBalance);
            $machine->save();
-           $this->view->setVar('message','продукт выдан');
 
            $quantity--;
            $product->setQuantity($quantity);
            $product->save();
 
+           $message = 'продукт выдан';
+           $isSelectionValidated = true;
+
 
        }
        elseif ($quantity==0)
        {
-           $this->view->setVar('message','продукт закончен');
+           $message = 'продукт закончен';
        }
        else
        {
-           $this->view->setVar('message','не достаточно срество');
+           $message = 'не достаточно срество';
        }
        $this->getMachineInfo();
        $this->getCustomerInfo();
+       $this->refreshPage($message);
+
+       return [
+           'isSelectionValidated' => $isSelectionValidated,
+           'message' => $message
+       ];
    }
 
    public function getCustomerSum():int
@@ -276,7 +277,6 @@ class MainController extends \Phalcon\Mvc\Controller
        return $this->getSumFromCoins($this->customerCoins);
    }
 
-
    public function getMachineSum():int
    {
        $this->vendingWallet = VendingWallet::findFirst();
@@ -287,7 +287,6 @@ class MainController extends \Phalcon\Mvc\Controller
 
        return $this->getSumFromCoins($this->vendingMachineCoins);
    }
-
 
    public function getBalance(): int
    {
@@ -305,9 +304,6 @@ class MainController extends \Phalcon\Mvc\Controller
 
    }
 
-
-
-
    private function getCustomerInfo()
    {
        $this->view->setVar('baseUrl',$this->baseUrl);
@@ -316,9 +312,6 @@ class MainController extends \Phalcon\Mvc\Controller
 
 
    }
-
-
-
 
    private function getMachineInfo()
    {
@@ -331,13 +324,13 @@ class MainController extends \Phalcon\Mvc\Controller
 
    }
 
+   private function refreshPage($message)
+   {
+       $this->response->redirect('/main/index/'. $message);
+       $this->view->disable();
 
 
-
-
-
-
-
+   }
 
 }
 
