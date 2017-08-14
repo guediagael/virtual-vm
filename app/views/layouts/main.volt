@@ -18,7 +18,7 @@
             </div>
         </div>
         <div id="balance" class="col-sm-4 panel panel-default">
-            <div class="panel-heading">Внесенная сумма {{ vmCache }} руб</div>
+            <div class="panel-heading">Внесенная сумма {{ vmBalance }} руб</div>
             <div class="panel-body">
                 <a class="btn btn-warning" href="{{ baseUrl }}/main/getChange/"> Сдача</a>
                 <h3>{{ message }}</h3>
@@ -35,7 +35,7 @@
                     </a>
                 {% endfor %}
 
-                <h1>Автомат {{ vmBalance }}</h1>
+                <h1>Автомат {{ vmSum }}</h1>
                 {% for coin in vendingCoins %}
                     {{ coin.value }} руб * {{ coin.quantity }} ;
                 {% endfor %}

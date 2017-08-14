@@ -1,5 +1,5 @@
 <?php
-
+namespace Models;
 class Product extends \Phalcon\Mvc\Model
 {
 
@@ -160,6 +160,6 @@ class Product extends \Phalcon\Mvc\Model
 
     function getData()
     {
-        // TODO: Implement getData() method.
+        return self::find();
     }
 }

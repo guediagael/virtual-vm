@@ -7,7 +7,7 @@
  */
 
 
-
+namespace Models;
 
 interface Wallet
 {

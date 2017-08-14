@@ -2,7 +2,8 @@
 
 namespace Models;
 
-class ClientWallet extends \Phalcon\Mvc\Model implements \Wallet
+
+class ClientWallet extends \Phalcon\Mvc\Model implements Wallet
 {
     use \Models\TWallet;
 

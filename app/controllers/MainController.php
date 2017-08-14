@@ -1,17 +1,20 @@
 <?php
 
+//namespace Controllers;
+
 use Models\ClientWallet as Client;
 use Models\VmWallet as VendingWallet;
 use Models\Coin as Coin;
 use Models\Utils\CoinSort as CoinSort;
+use Models\Product;
 
 class MainController extends \Phalcon\Mvc\Controller
 {
     private $baseUrl ='http://localhost/virtual-vm';
 
     private $customerBalance = 0;
-    private $vmCache = 0;
     private $vmBalance = 0;
+    private $vmSum = 0;
 
     private $customerWallet;
     private $vendingWallet;
@@ -33,13 +36,8 @@ class MainController extends \Phalcon\Mvc\Controller
     }
 
 
-
-   public function balanceInfoAction(){
-        $this->view->setVar('clientBalance' ,50);
-        $this->view->getVar('clientBalance');
-   }
-
-   public function coinInsertedAction(int $value){
+   public function coinInsertedAction(int $value)
+   {
        $this->customerWallet = Client::findFirst();
        $this->vendingWallet = VendingWallet::findFirst();
 
@@ -112,7 +110,8 @@ class MainController extends \Phalcon\Mvc\Controller
    }
 
 
-   public function getChangeAction(){
+   public function getChangeAction()
+   {
        $machine=VendingWallet::findFirst();
        $oldBalance = $machine->getBalance();
 
@@ -177,12 +176,12 @@ class MainController extends \Phalcon\Mvc\Controller
        $this->getCustomerInfo();
        $this->getMachineInfo();
 
-//       $this->view->setVar('vmCache',$availableBalance);
        $this->view->setVar('message','');
    }
 
 
-   public function resetAction(){
+   public function resetAction()
+   {
        $this->vendingWallet = VendingWallet::findFirst();
        $this->vendingWallet->setTenRub(100);
        $this->vendingWallet->setFiveRub(100);
@@ -198,27 +197,67 @@ class MainController extends \Phalcon\Mvc\Controller
        $this->customerWallet->setTenRub(15);
        $this->customerWallet->save();
 
+       $availableProducts = new Product();
+       $this->products = $availableProducts->getData();
+
+       foreach ($this->products as $product)
+       {
+           switch ($product->getName())
+           {
+               case 'tea' :
+                   $product->setQuantity(10);
+                   $product->save();
+                   break;
+               case 'Coffee' :
+                   $product->setQuantity(20);
+                   $product->save();
+                   break;
+               case 'white coffee' :
+                   $product->setQuantity(20);
+                   $product->save();
+                   break;
+               case 'juice' :
+                   $product->setQuantity(15);
+                   $product->save();
+                   break;
+           }
+       }
+
+
        $this->view->setVar('message','');
        $this->getCustomerInfo();
        $this->getMachineInfo();
 
    }
 
-   public function productSelectedAction($id){
+   public function productSelectedAction($id)
+   {
        $product = Product::findFirst($id);
 
        $price = $product->getPrice();
 
+       $quantity = $product->getQuantity();
+
        $machine = VendingWallet::findFirst();
 
-       $this->vmCache = $machine->getBalance();
+       $this->vmBalance = $machine->getBalance();
 
-       if ($price<=$this->vmCache)
+       if ($price<=$this->vmBalance && $quantity>0)
        {
-           $newBalance = $this->vmCache - $price;
+           $newBalance = $this->vmBalance - $price;
            $machine->setBalance($newBalance);
            $machine->save();
            $this->view->setVar('message','продукт выдан');
+
+           $quantity--;
+           $product->setQuantity($quantity);
+           $product->save();
+
+
+       }
+       elseif ($quantity==0)
+       {
+           $this->view->setVar('message','продукт закончен');
        }
        else
        {
@@ -228,44 +267,64 @@ class MainController extends \Phalcon\Mvc\Controller
        $this->getCustomerInfo();
    }
 
-   private function getBalance(&$coins ): int{
-       $ones = $coins[Coin::ONE_RUB]->quantity;
-       $twos = $coins[Coin::TWO_RUB]->quantity * 2;
-       $fives = $coins[Coin::FIVE_RUB]->quantity * 5;
-       $tens = $coins[Coin::TEN_RUB]->quantity * 10;
-
-       return $ones + $twos + $fives + $tens;
-
-   }
-
-
-
-
-   private function getCustomerInfo(){
-       $this->view->setVar('baseUrl',$this->baseUrl);
+   public function getCustomerSum():int
+   {
        $this->customerWallet = Client::findFirst();
        $this->customerWallet->getData();
        $this->customerCoins= $this->customerWallet->getAvailableCoins();
 
-       $this->customerBalance = $this->getBalance($this->customerCoins);
-       $this->view->setVar('coins',$this->customerCoins);
-       $this->view->setVar('customerBalance' ,$this->customerBalance);
+       return $this->getSumFromCoins($this->customerCoins);
    }
 
 
-
-   private function getMachineInfo(){
+   public function getMachineSum():int
+   {
        $this->vendingWallet = VendingWallet::findFirst();
        $this->vendingWallet->getData();
        $this->vendingMachineCoins = $this->vendingWallet->getAvailableCoins();
 
+       $this->vmBalance =$this->vendingWallet->getBalance();
 
-       $this->vmBalance = $this->getBalance($this->vendingMachineCoins);
-       $this->vmCache =$this->vendingWallet->getBalance();
+       return $this->getSumFromCoins($this->vendingMachineCoins);
+   }
+
+
+   public function getBalance(): int
+   {
+       return $this->vmBalance;
+   }
+
+   private function getSumFromCoins(&$coins ): int
+   {
+       $ones = $coins[Coin::ONE_RUB]->quantity;
+       $twos = $coins[Coin::TWO_RUB]->quantity ;
+       $fives = $coins[Coin::FIVE_RUB]->quantity ;
+       $tens = $coins[Coin::TEN_RUB]->quantity ;
+
+       return $ones + $twos * 2 + $fives * 5 + $tens * 10;
+
+   }
+
+
+
+
+   private function getCustomerInfo()
+   {
+       $this->view->setVar('baseUrl',$this->baseUrl);
+       $this->view->setVar('customerBalance' ,$this->getCustomerSum());
+       $this->view->setVar('coins',$this->customerCoins);
+
+
+   }
+
+
+
+
+   private function getMachineInfo()
+   {
        $this->products = Product::find();
-
-       $this->view->setVar('vmBalance' , $this->vmBalance);
-       $this->view->setVar('vmCache' ,$this->vmCache);
+       $this->view->setVar('vmSum' , $this->getMachineSum());
+       $this->view->setVar('vmBalance' ,$this->vmBalance);
        $this->view->setVar('products',$this->products);
        $this->view->setVar('vendingCoins', $this->vendingMachineCoins);
 
