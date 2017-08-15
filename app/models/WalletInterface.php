@@ -9,7 +9,7 @@
 
 namespace Models;
 
-interface Wallet
+interface WalletInterface
 {
 
     function getData();

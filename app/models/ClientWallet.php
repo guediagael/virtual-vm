@@ -3,9 +3,9 @@
 namespace Models;
 
 
-class ClientWallet extends \Phalcon\Mvc\Model implements Wallet
+class ClientWallet extends \Phalcon\Mvc\Model implements WalletInterface
 {
-    use \Models\TWallet;
+    use \Models\WalletTrait;
 
     /**
      *
@@ -192,23 +192,23 @@ class ClientWallet extends \Phalcon\Mvc\Model implements Wallet
         return parent::findFirst($parameters);
     }
 
-    function getData()
-    {
-        $ones = new Coin(1);
-        $ones->quantity = $this->getOneRub();
-
-        $twos = new Coin(2);
-        $twos->quantity = $this->getTwoRub();
-
-        $fives = new Coin(5);
-        $fives->quantity = $this->getFiveRub();
-
-        $tens = new Coin(10);
-        $tens->quantity = $this->getTenRub();
-
-        $this->coins[Coin::ONE_RUB] = $ones;
-        $this->coins[Coin::TWO_RUB] = $twos;
-        $this->coins[Coin::FIVE_RUB] = $fives;
-        $this->coins[Coin::TEN_RUB] = $tens;
-    }
+//    function getData()
+//    {
+//        $ones = new Coin(1);
+//        $ones->quantity = $this->getOneRub();
+//
+//        $twos = new Coin(2);
+//        $twos->quantity = $this->getTwoRub();
+//
+//        $fives = new Coin(5);
+//        $fives->quantity = $this->getFiveRub();
+//
+//        $tens = new Coin(10);
+//        $tens->quantity = $this->getTenRub();
+//
+//        $this->coins[Coin::ONE_RUB] = $ones;
+//        $this->coins[Coin::TWO_RUB] = $twos;
+//        $this->coins[Coin::FIVE_RUB] = $fives;
+//        $this->coins[Coin::TEN_RUB] = $tens;
+//    }
 }

@@ -3,7 +3,7 @@ namespace Models;
 class Product extends \Phalcon\Mvc\Model
 {
 
-    use \Models\TWallet;
+    use \Models\WalletTrait;
     /**
      *
      * @var integer
